@@ -1,0 +1,46 @@
+{
+  "name": "estudo_node_3",
+  "version": "1.0.0",
+  "description": "Projeto de estudos das aulas de node da Rocketseat",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 18"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ossamumaeda/estudo_node_3.git"
+  },
+  "keywords": [
+    "Node",
+    "Javascript",
+    "typescript"
+  ],
+  "author": "ossamumaeda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ossamumaeda/estudo_node_3/issues"
+  },
+  "homepage": "https://github.com/ossamumaeda/estudo_node_3#readme",
+  "devDependencies": {
+    "@types/node": "22.3.0",
+    "eslint": "9.9.0",
+    "globals": "15.9.0",
+    "prisma": "5.18.0",
+    "tsup": "8.2.4",
+    "tsx": "4.17.0",
+    "typescript": "5.5.4",
+    "typescript-eslint": "8.1.0"
+  },
+  "dependencies": {
+    "@prisma/client": "5.18.0",
+    "dotenv": "16.4.5",
+    "fastify": "4.28.1",
+    "zod": "3.23.8"
+  }
+}
