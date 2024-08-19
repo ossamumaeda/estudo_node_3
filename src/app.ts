@@ -1,8 +1,23 @@
 import fastify from "fastify";
-import { registerController } from "http/controllers/register-controller";
-import { prisma } from "lib/prisma";
-import { z } from "zod";
+import { appRoutes } from "./http/routes";
+import { ZodError } from "zod";
+import { env } from "./env";
 
 export const app = fastify()
-// Controller -> Entrada e saida de dados de uma requisicao HTTP
-app.post('/users',registerController)
+
+app.register(appRoutes)
+
+app.setErrorHandler((error, _,reply) =>{
+    if(error instanceof ZodError){
+        return reply
+        .status(400)
+        .send({message: 'Validation error',issues: error.format()})
+    }
+
+    if(env.NODE_ENV !== 'production'){
+        console.log(error)
+    }else{
+        // Create a log with external tool
+    }
+    return reply.status(500).send({message: 'Internal server error'})
+})
