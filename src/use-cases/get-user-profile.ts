@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 import { ResourceNotFound } from "./errors/resource-not-found";
 
 interface GetUserProfileUseCaseRequest {
-    id: string
+    userId: string
 }
 
 interface GetUserProfileUseCaseResponse {
@@ -17,15 +17,17 @@ export class GetUserProfileUseCase {
         private userRepository: UsersRepository,
     ) { }
 
-    async handle({ id }: GetUserProfileUseCaseRequest): Promise<GetUserProfileUseCaseResponse> {
+    async handle({
+        userId
+    }: GetUserProfileUseCaseRequest): Promise<GetUserProfileUseCaseResponse> {
         // Find user by email
         // compare password hash with password in request
-        const user = await this.userRepository.findByEmail(id)
+        const user = await this.userRepository.findById(userId)
 
-        if (!user) { 
+        if (!user) {
             throw new ResourceNotFound()
         }
 
-        return {user}
+        return { user }
     }
 }
