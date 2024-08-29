@@ -32,7 +32,7 @@ describe('Get user profile Use Cases', () => {
     })
 
     test('should not be able to find user by id', async () => { // Unit test
-        expect(() =>   sut.handle({
+        await expect(() =>   sut.handle({
                 userId: 'non-ext'
             })).rejects.toBeInstanceOf(ResourceNotFound)
 

@@ -36,7 +36,7 @@ describe('Register Use Cases', () => {
         const email = 'TestAuthenticate@email'
         const password = '123456'
 
-        expect(() => sut.handle({
+        await expect(() => sut.handle({
             email,
             password
         })).rejects.toBeInstanceOf(InvalidCredentials)
@@ -55,7 +55,7 @@ describe('Register Use Cases', () => {
             password_hash: await hash(password, 6)
         })
 
-        expect(() => sut.handle({
+        await expect(() => sut.handle({
             email,
             password: '654321'
         })).rejects.toBeInstanceOf(InvalidCredentials)
