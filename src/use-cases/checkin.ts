@@ -1,10 +1,15 @@
 import { hash } from "bcryptjs"
 import { CheckIn, User } from "@prisma/client"
 import { CheckInRepository } from "@/repositories/check-ins-repository"
+import { GymsRepository } from "@/repositories/gyms-repository"
+import { ResourceNotFound } from "./errors/resource-not-found"
+import { getDistanceBetweenCoordinates } from "@/utils/get-distante-between-coordinates"
 
 interface CheckinUseCaseRequest {
     userId: string
     gymId: string
+    userLatitude: number
+    userLongitude: number
 }
 
 interface CheckinUseCaseResponse {
@@ -12,11 +17,29 @@ interface CheckinUseCaseResponse {
 }
 
 export class CheckinUseCase {
-    constructor(private checkInRepository: CheckInRepository) { }
+    constructor(
+        private checkInRepository: CheckInRepository,
+        private gymsRepository: GymsRepository
+    ) { }
 
     async handle({
-        gymId, userId
+        gymId, userId, userLatitude,userLongitude
     }: CheckinUseCaseRequest): Promise<CheckinUseCaseResponse> {
+        const gym = await this.gymsRepository.findById(gymId)
+        if(!gym){
+            throw new ResourceNotFound()
+        }
+
+        // Calculate distance between user and the gym
+        const distance = getDistanceBetweenCoordinates(
+            {latitude: userLatitude,longitude: userLongitude},
+            {latitude: gym.latitude.toNumber(),longitude: gym.longitude.toNumber()}
+        )
+        const MAX_DISTANCE_IN_KILOMETERS = 0.1
+        if(distance > MAX_DISTANCE_IN_KILOMETERS ){ // 100 meters
+            throw new Error()
+        }
+
         const checkInOnSameDate = await this.checkInRepository.findUserIdOnDate(
             userId,
             new Date()
