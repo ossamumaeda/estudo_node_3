@@ -6,6 +6,7 @@ import { CheckinUseCase } from './checkin'
 import { M } from 'vitest/dist/chunks/reporters.C_zwCd4j'
 import { rejects } from 'assert'
 import { ResourceNotFound } from './errors/resource-not-found'
+import { LateCheckInValidation } from './errors/late-check-in-validation-error'
 
 let checkInRepo: InMemoryCheckInsRepository
 let sut: ValidateCheckinUseCase
@@ -57,6 +58,27 @@ describe('Validate Check-in Use Cases', () => {
                 checkInId: 'not-found'
             }),
         ).rejects.toBeInstanceOf(ResourceNotFound)
+    })
+
+    test('should not be able to validate check in after 20 min', async () => { // Unit test
+
+        vi.setSystemTime(new Date(2023,0,1,13,40))
+
+
+        const createdCheckIn = await checkInRepo.create({
+            gym_id: 'id-1',
+            user_id: '1',
+        })
+        const twentyOneMinutesMiliseconds = 1000 * 60 * 21;
+        vi.advanceTimersByTime(twentyOneMinutesMiliseconds)
+
+
+        await expect(() =>
+            sut.handle({
+                checkInId: createdCheckIn.id
+            }),
+        ).rejects.toBeInstanceOf(LateCheckInValidation)
+
     })
 
 })
