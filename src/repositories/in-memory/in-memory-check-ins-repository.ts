@@ -16,7 +16,7 @@ export class InMemoryCheckInsRepository implements CheckInRepository{
         return checkIn
     }
 
-    async findById(checkInId: String): Promise<CheckIn | null> {
+    async findById(checkInId: string): Promise<CheckIn | null> {
         const checkIns = this.items.find((item) => item.id === checkInId)
 
         if(!checkIns){
@@ -42,7 +42,7 @@ export class InMemoryCheckInsRepository implements CheckInRepository{
         return checkIn
     }
 
-    async findUserIdOnDate(userId: String, date: Date){
+    async findUserIdOnDate(userId: string, date: Date){
         const startOfTheDay = dayjs(date).startOf('date')
         const endOfTheDay = dayjs(date).endOf('date')
         
@@ -63,7 +63,7 @@ export class InMemoryCheckInsRepository implements CheckInRepository{
         return checkInOnSameDate
     }
 
-    async fetchManyByUserId(userId: String, page: number): Promise<CheckIn[] | []> {
+    async fetchManyByUserId(userId: string, page: number): Promise<CheckIn[] | []> {
         const checkIns = this.items
             .filter((checkIn) => checkIn.user_id === userId)
             .slice((page-1) * 20,page*20)
@@ -71,7 +71,7 @@ export class InMemoryCheckInsRepository implements CheckInRepository{
         return checkIns;
     }
 
-    async countByUserId(userId: String){
+    async countByUserId(userId: string){
         return this.items
             .filter((checkIn) => checkIn.user_id === userId).length
     }
